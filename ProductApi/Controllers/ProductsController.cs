@@ -41,8 +41,8 @@ namespace ProductApi.Controllers
             return await _mediator.Send(new GetAllProductQuery());
         }
 
-        //[HttpGet("{id}")]
-        /*public async Task<Product> Get(int id)
+        [HttpGet("{id}")]
+        public async Task<Product> Get(int id)
         {
             //var product = _productRepository.GetProductById(id);
             //var product = await _productService.GetProductByIdAsync(id);
@@ -55,7 +55,7 @@ namespace ProductApi.Controllers
             //return Ok(productDto);
 
             return await _mediator.Send(new GetProductByIdQuery { Id = id });
-        }*/
+        }
 
         [HttpPost]
         public async Task<IActionResult> AddProduct([FromForm] Product product, IFormFile productImage)
@@ -190,6 +190,59 @@ namespace ProductApi.Controllers
              }
          }
  */
+        
+
+        //support multiple image extensions
+
+ /*       [HttpGet("GetImages")]
+        public async Task<IActionResult> GetImages(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName))
+            {
+                return BadRequest("File name is not provided.");
+            }
+
+            try
+            {
+                // List of supported image extensions
+                var supportedExtensions = new[] { ".png", ".jpeg", ".jpg" };
+                string filePath = null;
+                string fileExtension = null;
+
+                // Check for each supported extension
+                foreach (var extension in supportedExtensions)
+                {
+                    var potentialFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", fileName + extension);
+                    if (System.IO.File.Exists(potentialFilePath))
+                    {
+                        filePath = potentialFilePath;
+                        fileExtension = extension;
+                        break;
+                    }
+                }
+
+                if (filePath == null)
+                {
+                    return NotFound("File not found.");
+                }
+
+                var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
+                var mimeType = fileExtension switch
+                {
+                    ".png" => "image/png",
+                    ".jpeg" => "image/jpeg",
+                    ".jpg" => "image/jpeg",
+                    _ => "application/octet-stream"
+                };
+
+                return File(fileBytes, mimeType);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Internal server error", error = ex.Message });
+            }
+        }
+*/
 
         [HttpGet("GetImages")]
         public async Task<IActionResult> GetImages(string fileName)
@@ -200,7 +253,9 @@ namespace ProductApi.Controllers
             }
             try
             {
-                string fileExtension = ".png";
+                //support single image extension
+                string fileExtension = ".jpeg";
+
                 var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", fileName + fileExtension);
 
                 if (!System.IO.File.Exists(filePath))
@@ -209,7 +264,7 @@ namespace ProductApi.Controllers
 
                 }
                 var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
-                return File(fileBytes, "image/png"); // Adjust MIME type based on image format
+                return File(fileBytes, "image/jpeg"); // Adjust MIME type based on image format
 
             }
             catch (Exception ex)
@@ -229,7 +284,7 @@ namespace ProductApi.Controllers
             {
                 return BadRequest("File name is not provided.");
             }
-            string fileExtension = ".png";
+            string fileExtension = ".jpeg";
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", fileName + fileExtension);
 
             if (!System.IO.File.Exists(filePath))
