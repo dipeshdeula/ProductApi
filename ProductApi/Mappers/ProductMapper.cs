@@ -13,7 +13,7 @@ namespace ProductApiAsync.Mappers
                 Name = product.Name,
                 Description = product.Description,
                 Price = product.Price,
-                ImageUrl = product.ImageUrl
+                //ImageUrl = product.ImageUrl
             };
         }
 
@@ -26,7 +26,7 @@ namespace ProductApiAsync.Mappers
                 Name = productDto.Name,
                 Description = productDto.Description,
                 Price = productDto.Price,
-                ImageUrl = productDto.ImageUrl
+               // ImageUrl = productDto.ImageUrl
 
             };
         }

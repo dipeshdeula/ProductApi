@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProductApi.Models;
 using ProductApi.Services;
 using ProductApiAsync.Command;
+using ProductApiAsync.DTOs;
 using ProductApiAsync.Queries;
 
 namespace ProductApi.Controllers
@@ -58,10 +59,10 @@ namespace ProductApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddProduct([FromForm] Product product, IFormFile productImage)
+        public async Task<IActionResult> AddProduct([FromForm] ProductDto product, IFormFile productImage)
         {
             var createdProduct = await _mediator.Send(new CreateProductCommand(
-                product.Name, product.Description, product.Price, product.ImageUrl, productImage));
+                product.Name, product.Description, product.Price, null, productImage));
 
             // Generate the image URL
             var imageUrl = Url.Action("GetImages", "Products", new { fileName = createdProduct.ImageUrl }, Request.Scheme);
@@ -79,7 +80,7 @@ namespace ProductApi.Controllers
 
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProduct(int id, [FromForm] Product product, IFormFile productImage)
+        public async Task<IActionResult> UpdateProduct(int id, [FromForm] ProductDto product, IFormFile productImage)
         {
             if (id != product.Id)
             {
@@ -91,7 +92,7 @@ namespace ProductApi.Controllers
                 product.Name,
                 product.Description,
                 product.Price,
-                product.ImageUrl,
+              //  product.ImageUrl,
                 productImage
             ));
 
