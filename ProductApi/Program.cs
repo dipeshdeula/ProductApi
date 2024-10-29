@@ -88,6 +88,7 @@ namespace ProductApi
             builder.Services.AddAuthorization(opt =>
             {
                 opt.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+                opt.AddPolicy("UserOnly", policy => policy.RequireRole("User"));
             });
 
           

@@ -21,6 +21,6 @@ namespace ProductApiAsync.Command
 
         //public string ImageUrl { get; set; }
 
-        public IFormFile ProductImage { get; set; }
+        public IFormFile? ProductImage { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProductApi.Models;
 using ProductApi.Services;
@@ -35,6 +36,7 @@ namespace ProductApi.Controllers
             _productService = productService;
         }
         [HttpGet]
+        [Authorize(Roles ="Admin,User")]
         public async Task<IEnumerable<Product>> GetProducts()
         {
             // var products = await _productService.GetAllProductsAsync();
@@ -43,6 +45,7 @@ namespace ProductApi.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles ="Admin,User")]
         public async Task<Product> Get(int id)
         {
             //var product = _productRepository.GetProductById(id);
@@ -57,8 +60,9 @@ namespace ProductApi.Controllers
 
             return await _mediator.Send(new GetProductByIdQuery { Id = id });
         }
-
+        
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddProduct([FromForm] ProductDto product, IFormFile productImage)
         {
             var createdProduct = await _mediator.Send(new CreateProductCommand(
@@ -78,9 +82,10 @@ namespace ProductApi.Controllers
             });
         }
 
-
+        
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProduct(int id, [FromForm] ProductDto product, IFormFile productImage)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateProduct(int id, [FromForm] ProductDto product, IFormFile? productImage)
         {
             if (id != product.Id)
             {
@@ -99,7 +104,9 @@ namespace ProductApi.Controllers
             return Ok(productReturn);
         }
 
+       
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<int> Delete(int id)
         {
             //await _productService.DeleteProductAsync(id);
@@ -107,6 +114,7 @@ namespace ProductApi.Controllers
             return await _mediator.Send(new DeleteProductCommand { Id = id });
         }
         [HttpPost("UploadFile")]
+        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> UploadFile(IFormFile productImage, int productId)
         {
             if (productImage == null || productImage.Length == 0)
@@ -246,6 +254,7 @@ namespace ProductApi.Controllers
 */
 
         [HttpGet("GetImages")]
+        [Authorize(Roles ="Admin, User")]
         public async Task<IActionResult> GetImages(string fileName)
         {
             if (string.IsNullOrEmpty(fileName))
@@ -279,6 +288,7 @@ namespace ProductApi.Controllers
         }
 
         [HttpGet("GetImage")]
+        [Authorize(Roles ="Admin, User")]
         public async Task<IActionResult> GetImage(string fileName)
         {
             if (string.IsNullOrEmpty(fileName))
